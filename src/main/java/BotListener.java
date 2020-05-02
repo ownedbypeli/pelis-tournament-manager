@@ -2,7 +2,10 @@ import commands.GetTournamentCommand;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.json.JSONException;
 
+import javax.imageio.IIOException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,24 +13,30 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (checkIfBot(event.getAuthor())) return;
         Message message = event.getMessage();
-        String content = message.getContentRaw();
+        MessageChannel channel = event.getChannel();
         Guild guild = event.getGuild();
-        if (checkIfCommand(content)) {
-            String command = getCommandName(content);
-            ArrayList<String> props = getCommandProps(content);
-            if (command.equals("!getTournament")) {
-                if (props.size() == 1) {
-                    MessageChannel channel = event.getChannel();
-                    channel.sendMessage("Pong!").queue(); // Important to call .queue() on the RestAction returned by sendMessage(...)
-                    GetTournamentCommand gtc = new GetTournamentCommand(props.get(0),guild);
-                    gtc.start();
-                }else{
-                    //Throw exception
+        try {
+            if (checkIfBot(event.getAuthor())) return;
+            String content = message.getContentRaw();
+            if (checkIfCommand(content)) {
+                String command = getCommandName(content);
+                ArrayList<String> props = getCommandProps(content);
+                if (command.equals("!getTournament")) {
+                    if (props.size() == 1) {
+                        GetTournamentCommand gtc = new GetTournamentCommand(props.get(0),guild);
+                        gtc.start();
+                        channel.sendMessage("Pong!").queue();
+                    }else{
+                        //Throw exception
+                    }
                 }
-            }
 
+            }
+        } catch (JSONException e) {
+            channel.sendMessage(e.toString()).queue();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 

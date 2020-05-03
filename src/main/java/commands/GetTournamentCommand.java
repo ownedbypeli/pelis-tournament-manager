@@ -1,9 +1,8 @@
 package commands;
 
 import help.PrivateConstReader;
-import net.dv8tion.jda.api.entities.Category;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import objects.Tournament;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -19,6 +18,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class GetTournamentCommand {
@@ -42,14 +42,16 @@ public class GetTournamentCommand {
         getApiToken();
         getTournamentData();
         String categoryName = tournament.getName() + " #" + tournament.getId();
-        ChannelAction channelAction = guild.createCategory(categoryName);
-        channelAction.queue(
-
-
-        );
-
-//        Category category = guild.getCategoriesByName("categoryName",true).get(0);
-//        category.createTextChannel("Tournament Information").queue();
+        guild.createCategory(categoryName).queue((cat) -> {
+            cat.createTextChannel("Tournament-Information")
+                    .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.MESSAGE_WRITE)).setTopic("Here you gonna find all information about this upcoming tournament")
+                    .queue(textChan -> {
+                        textChan.sendMessage(tournament.toString()).queue();
+                    });
+            cat.createTextChannel("Tournament-Feed").addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.MESSAGE_WRITE)).queue();
+            cat.createTextChannel("Tournament-Registration").queue();
+            cat.createTextChannel("Tournament-Chat").queue();
+        });
 
     }
 

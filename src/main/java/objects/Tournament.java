@@ -1,5 +1,7 @@
 package objects;
 
+import help.StringHelper;
+
 public class Tournament {
     String id;
     String name;
@@ -109,22 +111,12 @@ public class Tournament {
 
     @Override
     public String toString() {
-        return "Tournament{" +
-                "name='" + name + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", scheduledDateStart='" + scheduledDateStart + '\'' +
-                ", getScheduledDateEnd='" + getScheduledDateEnd + '\'' +
-                ", timezone='" + timezone + '\'' +
-                ", size='" + size + '\'' +
-                ", registrationClosingDatetime='" + registrationClosingDatetime + '\'' +
-                ", description='" + description + '\'' +
-                ", rules='" + rules + '\'' +
-                ", prize='" + prize + '\'' +
-                ", checkInParticipantStartDatetime='" + checkInParticipantStartDatetime + '\'' +
-                ", checkInParticipantEndDatetime='" + checkInParticipantEndDatetime + '\'' +
-                ", platform='" + platform + '\'' +
-                ", organizer='" + organization + '\'' +
-                '}';
+        return
+                StringHelper.getTextBoldUnderlined("Timezone:") + StringHelper.getBreak(1) + getTimezone() + StringHelper.getBreak(1) +
+                StringHelper.getTextBoldUnderlined("Rules:") + StringHelper.getBreak(1) + getRules() + StringHelper.getBreak(2) +
+                        StringHelper.getTextBoldUnderlined("Prices:" + StringHelper.getBreak(1)) + getPrize() + StringHelper.getBreak(2) +
+                        StringHelper.getTextBoldUnderlined("Description:" + StringHelper.getBreak(1))
+                        + getDescription().replace("Registration takes place via Discord. All further information can be found there.", "");
     }
 
 

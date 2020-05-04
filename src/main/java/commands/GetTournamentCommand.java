@@ -41,7 +41,7 @@ public class GetTournamentCommand {
 
         getApiToken();
         getTournamentData();
-        String categoryName = tournament.getName() + " #" + tournament.getId();
+        String categoryName = tournament.getFullName() + " #" + tournament.getId();
         guild.createCategory(categoryName).queue((cat) -> {
             cat.createTextChannel("Tournament-Information")
                     .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.MESSAGE_WRITE)).setTopic("Here you gonna find all information about this upcoming tournament")

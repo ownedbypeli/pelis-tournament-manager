@@ -1,6 +1,6 @@
 package help;
 
-public class StringTransformer {
+public class StringHelper {
 
     public static String getTextBoldUnderlined(String text){
         return "__**"+text+"**__";
@@ -15,6 +15,18 @@ public class StringTransformer {
 
     public static String getTextBoldCursive(String text){
         return "***"+text+"***";
+    }
+
+    public static String getBreak(int amount){
+        String lineBreaks = "";
+        for (int i = 0; i < amount; i++) {
+            lineBreaks +=  "\n";
+        }
+        return lineBreaks;
+    }
+
+    public static String getIdFromString(String text){
+        return "";
     }
 
 }

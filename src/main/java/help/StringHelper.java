@@ -13,4 +13,9 @@ public class StringTransformer {
         return "__"+text+"__";
     }
 
+    public static String getTextBoldCursive(String text){
+        return "***"+text+"***";
+    }
+
 }
+

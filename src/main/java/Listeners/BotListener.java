@@ -57,8 +57,6 @@ public class BotListener extends ListenerAdapter {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

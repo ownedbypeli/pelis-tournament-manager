@@ -1,4 +1,4 @@
-package objects;
+package enums;
 
 public enum Command {
     GET_TOURNAMENT("!getTournament"),

@@ -32,7 +32,11 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.10</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.ownedbypeli</groupId>
+            <artifactId>ToornamentClient</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
             <groupId>org.json</groupId>
@@ -41,7 +45,13 @@
         </dependency>
 
     </dependencies>
+
+
     <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
         <repository>
             <id>jcenter</id>
             <name>jcenter</name>

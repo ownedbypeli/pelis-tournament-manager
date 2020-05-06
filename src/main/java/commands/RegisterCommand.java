@@ -1,11 +1,14 @@
 package commands;
 
+import com.toornament.ToornamentClient;
+import com.toornament.model.enums.Scope;
+import enums.Token;
 import help.PrivateConstReader;
-import help.RequestsHandler;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class RegisterCommand {
 
@@ -13,9 +16,9 @@ public class RegisterCommand {
     String toornamentName;
     String toornamentMail;
     String summonerName;
-    String token;
+
     String tournamentId;
-    String key = PrivateConstReader.getConstFromFile("C:\\projects\\tokens\\toornament_key.txt");
+    ToornamentClient toornamentClient;
 
 
     public RegisterCommand(User user) {
@@ -27,6 +30,9 @@ public class RegisterCommand {
         this.summonerName = props.get(0);
         this.toornamentName = props.get(1);
         this.toornamentMail = props.get(2);
+        HashSet<Scope> scopes = new HashSet<>();
+        scopes.add(Scope.ORGANIZER_REGISTRATION);
+        this.toornamentClient = new ToornamentClient(Token.API_KEY.getToken(), Token.CLIENT_ID.getToken(),Token.CLIENT_SECRET.getToken(), scopes);
     }
 
     public void sendRegistrationFormToUser(){
@@ -36,28 +42,7 @@ public class RegisterCommand {
     }
 
     public void registerUserToTournament(){
-        token = RequestsHandler.doPostApiTokenRequest("organizer:registration");
-        HashMap<String,String> headers = new HashMap<>();
-        headers.put("X-Api-Key",key);
-        headers.put("Authorization",token);
-        HashMap<String,String> params = new HashMap<>();
 
-        //JSONObject jsonObject = RequestsHandler.doPostRequest("https://api.toornament.com/organizer/v2/tournaments/"+tournamentId+"/registrations",headers,params);
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public String getSummonerName() {
-        return summonerName;
-    }
-
-    public String getToornamenAtName() {
-        return toornamentName;
-    }
-
-    public String getToornamentMail() {
-        return toornamentMail;
-    }
 }

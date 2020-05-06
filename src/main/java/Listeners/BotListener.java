@@ -6,10 +6,9 @@ import help.StringHelper;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import objects.Command;
+import enums.Command;
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class BotListener extends ListenerAdapter {
@@ -39,6 +38,7 @@ public class BotListener extends ListenerAdapter {
                     if (guild == null && props.size() == 3) {
 
                             RegisterCommand rc = new RegisterCommand(user, props);
+                            rc.sendRegistrationFormToUser();
 
                     } else  if (props.size() == 0){
                         RegisterCommand rc = new RegisterCommand(user);

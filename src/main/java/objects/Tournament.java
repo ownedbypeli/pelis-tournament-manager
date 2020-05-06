@@ -7,7 +7,6 @@ public class Tournament {
     String name;
     String fullName;
     String scheduledDateStart;
-    String getScheduledDateEnd;
     String timezone;
     String size;
     String registrationClosingDatetime;
@@ -17,7 +16,6 @@ public class Tournament {
     String checkInParticipantStartDatetime;
     String checkInParticipantEndDatetime;
     String platform;
-    String organization;
 
     public Tournament(String id,
                       String name,
@@ -31,8 +29,8 @@ public class Tournament {
                       String prize,
                       String checkInParticipantStartDatetime,
                       String checkInParticipantEndDatetime,
-                      String platform,
-                      String organization) {
+                      String platform
+                 ) {
         this.id = id;
         this.name = name;
         this.fullName = fullName;
@@ -46,7 +44,6 @@ public class Tournament {
         this.checkInParticipantStartDatetime = checkInParticipantStartDatetime;
         this.checkInParticipantEndDatetime = checkInParticipantEndDatetime;
         this.platform = platform;
-        this.organization = organization;
     }
 
     public String getId() {
@@ -63,10 +60,6 @@ public class Tournament {
 
     public String getScheduledDateStart() {
         return scheduledDateStart;
-    }
-
-    public String getGetScheduledDateEnd() {
-        return getScheduledDateEnd;
     }
 
     public String getTimezone() {
@@ -105,14 +98,15 @@ public class Tournament {
         return platform;
     }
 
-    public String getOrganization() {
-        return organization;
-    }
 
     @Override
     public String toString() {
         return
                 StringHelper.getTextBoldUnderlined("Timezone:") + StringHelper.getBreak(1) + getTimezone() + StringHelper.getBreak(1) +
+                        StringHelper.getTextBoldUnderlined("Platform:") + StringHelper.getBreak(1) + getPlatform() + StringHelper.getBreak(1) +
+                        StringHelper.getTextBoldUnderlined("DAte:") + StringHelper.getBreak(1) + getScheduledDateStart() + StringHelper.getBreak(1) +
+                        StringHelper.getTextBoldUnderlined("Registration:") + StringHelper.getBreak(1) + "The registration is open until " + getRegistrationClosingDatetime() + StringHelper.getBreak(1) +
+                        StringHelper.getTextBoldUnderlined("Amount Players:") + StringHelper.getBreak(1) + getSize() + StringHelper.getBreak(1) +
                 StringHelper.getTextBoldUnderlined("Rules:") + StringHelper.getBreak(1) + getRules() + StringHelper.getBreak(2) +
                         StringHelper.getTextBoldUnderlined("Prices:" + StringHelper.getBreak(1)) + getPrize() + StringHelper.getBreak(2) +
                         StringHelper.getTextBoldUnderlined("Description:" + StringHelper.getBreak(1))

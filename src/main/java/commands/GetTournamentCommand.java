@@ -1,25 +1,21 @@
 package commands;
 
 import help.PrivateConstReader;
+import help.RequestsHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import objects.Tournament;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
+import java.util.HashMap;
 
 public class GetTournamentCommand {
     String tournamentId;
@@ -28,7 +24,6 @@ public class GetTournamentCommand {
     String token;
     String clientId = PrivateConstReader.getConstFromFile("C:\\projects\\tokens\\client_id.txt");
     String clientSecret = PrivateConstReader.getConstFromFile("C:\\projects\\tokens\\client_secret.txt");
-    CloseableHttpClient httpClient = HttpClients.createDefault();
     Tournament tournament;
 
 
@@ -37,11 +32,11 @@ public class GetTournamentCommand {
         this.guild = guild;
     }
 
-    public void start() throws IOException {
+    public void getTournament() throws IOException {
 
-        getApiToken();
+        postApiToken();
         getTournamentData();
-        String categoryName = tournament.getFullName() + " #" + tournament.getId();
+        String categoryName = tournament.getFullName() + " #:" + tournament.getId();
         guild.createCategory(categoryName).queue((cat) -> {
             cat.createTextChannel("Tournament-Information")
                     .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.MESSAGE_WRITE)).setTopic("Here you gonna find all information about this upcoming tournament")
@@ -56,13 +51,10 @@ public class GetTournamentCommand {
     }
 
     public void getTournamentData() throws IOException {
-        try {
-            HttpGet request = new HttpGet("https://api.toornament.com/organizer/v2/tournaments/" + tournamentId);
-            // add request headers
-            request.addHeader("X-Api-Key", key);
-            request.addHeader("Authorization", token);
-            CloseableHttpResponse response = httpClient.execute(request);
-            JSONObject jsonObject = new JSONObject(EntityUtils.toString(response.getEntity()));
+            HashMap<String, String> headers = new HashMap<>();
+            headers.put("X-Api-Key",key);
+            headers.put("Authorization",token);
+        JSONObject jsonObject = RequestsHandler.doGetRequest("https://api.toornament.com/organizer/v2/tournaments/" + tournamentId,headers);
             tournament = new Tournament(
                     jsonObject.getString("id"),
                     jsonObject.getString("name"),
@@ -76,28 +68,20 @@ public class GetTournamentCommand {
                     jsonObject.getString("prize"),
                     jsonObject.getString("check_in_participant_start_datetime"),
                     jsonObject.getString("check_in_participant_end_datetime"),
-                    jsonObject.getJSONArray("platforms").getString(0),
-                    jsonObject.getString("organization")
+                    jsonObject.getJSONArray("platforms").getString(0)
             );
-
-        } finally {
-            httpClient.close();
-        }
 
     }
 
-    public void getApiToken() throws IOException {
-        HttpPost request = new HttpPost("https://api.toornament.com/oauth/v2/token");
-        request.addHeader("X-Api-Key", key);
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("grant_type", "client_credentials"));
-        params.add(new BasicNameValuePair("client_id", clientId));
-        params.add(new BasicNameValuePair("client_secret", clientSecret));
-        params.add(new BasicNameValuePair("scope", "organizer:view"));
-        request.setEntity(new UrlEncodedFormEntity(params));
-
-        HttpResponse response = httpClient.execute(request);
-        JSONObject jsonObject = new JSONObject(EntityUtils.toString(response.getEntity()));
+    public void postApiToken() throws IOException {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("X-Api-Key",key);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("grant_type", "client_credentials");
+        params.put("client_id", clientId);
+        params.put("client_secret", clientSecret);
+        params.put("scope", "organizer:view");
+        JSONObject jsonObject = RequestsHandler.doPostRequest( "https://api.toornament.com/oauth/v2/token", headers, params);
         token = jsonObject.getString("access_token");
     }
 

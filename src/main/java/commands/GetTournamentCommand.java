@@ -26,14 +26,14 @@ public class GetTournamentCommand {
         HashSet<Scope> scopes = new HashSet<>();
         scopes.add(Scope.ORGANIZER_VIEW);
         this.toornamentClient = new ToornamentClient(Token.API_KEY.getToken(), Token.CLIENT_ID.getToken(),Token.CLIENT_SECRET.getToken(), scopes);
-        this.tournaments = new TournamentsV2(toornamentClient);
+        toornamentClient.authorize();
+        this.tournaments = toornamentClient.tournamentsV2();
     }
 
     public void getTournament() {
-        toornamentClient.authorize();
         this.tournament = tournaments.getTournament(tournamentId);
 
-        String categoryName = tournament.getFullName() + " #:" + tournament.getId();
+        String categoryName = tournament.getFullName() + "     #:" + tournament.getId();
         guild.createCategory(categoryName).queue((cat) -> {
             cat.createTextChannel("Tournament-Information")
                     .addPermissionOverride(guild.getPublicRole(), null, EnumSet.of(Permission.MESSAGE_WRITE)).setTopic("Here you gonna find all information about this upcoming tournament")

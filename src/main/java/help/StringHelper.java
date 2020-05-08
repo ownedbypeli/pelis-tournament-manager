@@ -42,6 +42,11 @@ public class StringHelper {
         return words[0];
     }
 
+    public static String getFirstWord(String string)
+    {
+        return (string+" ").split(" ")[0];
+    }
+
     public static ArrayList<String> getCommandProps(String text) {
         ArrayList<String> words = new ArrayList<>(Arrays.asList(text.split(" ")));
         words.remove(0);

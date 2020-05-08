@@ -1,8 +1,14 @@
 package commands;
 
 import com.toornament.ToornamentClient;
-import com.toornament.concepts.RegistrationsV2;
+import com.toornament.concepts.Registrations;
+import com.toornament.model.Custom.Custom;
+import com.toornament.model.Custom.CustomFields;
+import com.toornament.model.Registration;
+import com.toornament.model.enums.CustomFieldTargetType;
+import com.toornament.model.enums.RegistrationType;
 import com.toornament.model.enums.Scope;
+import com.toornament.model.request.RegistrationQuery;
 import enums.Token;
 import help.PrivateConstReader;
 import net.dv8tion.jda.api.entities.Category;
@@ -22,7 +28,7 @@ public class RegisterCommand {
     String tournamentId;
     String tournamentNameWithId;
     ToornamentClient toornamentClient;
-    RegistrationsV2 registrations;
+    Registrations registrations;
 
 
 
@@ -41,19 +47,29 @@ public class RegisterCommand {
         scopes.add(Scope.ORGANIZER_REGISTRATION);
         this.toornamentClient = new ToornamentClient(Token.API_KEY.getToken(), Token.CLIENT_ID.getToken(),Token.CLIENT_SECRET.getToken(), scopes);
         this.toornamentClient.authorize();
-        this.registrations = new RegistrationsV2(toornamentClient,tournamentId);
+        this.registrations = new Registrations(toornamentClient,tournamentId);
 
     }
 
     public void sendRegistrationFormToUser(){
         user.openPrivateChannel().queue(chan ->{
-            chan.sendMessage("Registration for "+ tournamentNameWithId+"\n !register <summonerName> <toornamentName> <toornamentEmail>").queue();
+            chan.sendMessage("Registration for "+ tournamentNameWithId+" \n!register <summonerName> <toornamentName> <toornamentEmail>").queue();
         });
     }
 
     public void registerUserToTournament(){
-        registrations = new RegistrationsV2(toornamentClient,tournamentId);
-
+        registrations = new Registrations(toornamentClient,tournamentId);
+        RegistrationQuery registrationQuery = RegistrationQuery
+                .builder()
+                .name(toornamentName)
+                .email(toornamentMail)
+                .tournament_id(tournamentId)
+                .type(RegistrationType.PLAYER)
+                .customField("beschwoerername",summonerName)
+                .customField("discordname",user.getId())
+                .build();
+        Registration registrationResponse =registrations.register(registrationQuery);
+        registrationResponse.toString();
 
     }
 

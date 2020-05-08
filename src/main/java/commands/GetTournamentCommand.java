@@ -1,7 +1,7 @@
 package commands;
 
 import com.toornament.ToornamentClient;
-import com.toornament.concepts.TournamentsV2;
+import com.toornament.concepts.Tournaments;
 import com.toornament.model.TournamentDetails;
 import com.toornament.model.enums.Scope;
 import enums.Token;
@@ -17,7 +17,7 @@ public class GetTournamentCommand {
     String tournamentId;
     Guild guild;
     ToornamentClient toornamentClient;
-    TournamentsV2 tournaments;
+    Tournaments tournaments;
     TournamentDetails tournament;
 
     public GetTournamentCommand(String tournamentId, Guild guild) {
@@ -27,12 +27,11 @@ public class GetTournamentCommand {
         scopes.add(Scope.ORGANIZER_VIEW);
         this.toornamentClient = new ToornamentClient(Token.API_KEY.getToken(), Token.CLIENT_ID.getToken(),Token.CLIENT_SECRET.getToken(), scopes);
         toornamentClient.authorize();
-        this.tournaments = toornamentClient.tournamentsV2();
+        this.tournaments = toornamentClient.tournaments();
     }
 
     public void getTournament() {
         this.tournament = tournaments.getTournament(tournamentId);
-
         String categoryName = tournament.getFullName() + "     #:" + tournament.getId();
         guild.createCategory(categoryName).queue((cat) -> {
             cat.createTextChannel("Tournament-Information")

@@ -49,8 +49,7 @@ public class BotListener extends ListenerAdapter {
                         String tournamentNameWithId = event.getTextChannel().getParent().getName();
                         RegisterCommand rc = new RegisterCommand(user, tournamentNameWithId);
                         rc.sendRegistrationFormToUser();
-
-
+                        message.delete().queue();
                     } else {
                         //Throw exception Wrong Channel
                     }

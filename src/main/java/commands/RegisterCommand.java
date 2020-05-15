@@ -8,6 +8,7 @@ import com.toornament.model.Registration;
 import com.toornament.model.enums.CustomFieldTargetType;
 import com.toornament.model.enums.RegistrationType;
 import com.toornament.model.enums.Scope;
+
 import com.toornament.model.request.RegistrationQuery;
 import enums.Token;
 import help.PrivateConstReader;
@@ -46,30 +47,30 @@ public class RegisterCommand {
         HashSet<Scope> scopes = new HashSet<>();
         scopes.add(Scope.ORGANIZER_REGISTRATION);
         this.toornamentClient = new ToornamentClient(Token.API_KEY.getToken(), Token.CLIENT_ID.getToken(),Token.CLIENT_SECRET.getToken(), scopes);
-        this.toornamentClient.authorize();
+
         this.registrations = new Registrations(toornamentClient,tournamentId);
 
     }
 
     public void sendRegistrationFormToUser(){
         user.openPrivateChannel().queue(chan ->{
-            chan.sendMessage("Registration for "+ tournamentNameWithId+" \n!register <summonerName> <toornamentName> <toornamentEmail>").queue();
+            chan.sendMessage("Registration for "+ tournamentNameWithId+" \n write: !register <Your LoL summoner name> <Name of your toornament account> <The email of your toornament account> \n example: !register fakert1 faker faker@gmx.com").queue();
         });
     }
 
     public void registerUserToTournament(){
+        this.toornamentClient.authorize();
         registrations = new Registrations(toornamentClient,tournamentId);
-        RegistrationQuery registrationQuery = RegistrationQuery
-                .builder()
-                .name(toornamentName)
+        RegistrationQuery.RegistrationQueryBuilder registrationQuery = RegistrationQuery.builder();
+                registrationQuery.name(toornamentName)
                 .email(toornamentMail)
                 .tournament_id(tournamentId)
                 .type(RegistrationType.PLAYER)
                 .customField("beschwoerername",summonerName)
-                .customField("discordname",user.getId())
-                .build();
-        Registration registrationResponse =registrations.register(registrationQuery);
-        registrationResponse.toString();
+                .customField("discordname",user.getId());
+        Registration registrationResponse =registrations.register(registrationQuery.build());
+        System.out.println(registrationResponse.toString());
+
 
     }
 

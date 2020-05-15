@@ -35,7 +35,7 @@
         <dependency>
             <groupId>com.github.ownedbypeli</groupId>
             <artifactId>ToornamentClient</artifactId>
-            <version>2.0.6</version>
+            <version>2.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>

@@ -70,7 +70,9 @@ public class RegisterCommand {
                 .customField("discordname",user.getId());
         Registration registrationResponse =registrations.register(registrationQuery.build());
         System.out.println(registrationResponse.toString());
-
+        user.openPrivateChannel().queue(chan ->{
+            chan.sendMessage("Your registration has been sent").queue();
+        });
 
     }
 

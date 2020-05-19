@@ -15,16 +15,18 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+
         if (checkIfBot(event.getAuthor())) return;
         Message message = event.getMessage();
         MessageChannel channel = event.getChannel();
+        String content = message.getContentRaw();
+        if (!StringHelper.checkIfCommand(content)) return;
         Guild guild = null;
         if (!message.isFromType(ChannelType.PRIVATE)) guild = event.getGuild();
         User user = event.getAuthor();
-        String content = message.getContentRaw();
-        if (!StringHelper.checkIfCommand(content)) return;
         ArrayList<String> props = StringHelper.getCommandProps(content);
         Command command = Command.getCommandFromString(StringHelper.getCommandName(content));
+
         switch (Objects.requireNonNull(command)) {
             case GET_TOURNAMENT:
                 if (props.size() == 1) {
@@ -32,7 +34,7 @@ public class BotListener extends ListenerAdapter {
                     gtc.getTournament();
                     channel.sendMessage("Pong!").queue();
                 } else {
-                    //Throw exception props length
+                    channel.sendMessage("The properties are not correct, please check if you wrote the command liked described!" ).queue();
                 }
                 break;
             case Register_Participant:
@@ -51,14 +53,14 @@ public class BotListener extends ListenerAdapter {
                         rc.sendRegistrationFormToUser();
                         message.delete().queue();
                     } else {
-                        //Throw exception Wrong Channel
+                        channel.sendMessage("You can only execute a !register command in a registration channel or in your Dms" ).queue();
                     }
                 } else {
-                    //Throw exception props length
+                    channel.sendMessage("The properties are not correct, please check if you wrote the command liked described!" ).queue();
                 }
                 break;
             default:
-                //Throw exception command doesnt exist
+                channel.sendMessage("The command: " + StringHelper.getCommandName(content) +" doesn't exit!").queue();
                 break;
 
         }

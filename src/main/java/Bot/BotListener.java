@@ -1,4 +1,4 @@
-package Listeners;
+package Bot;
 
 import commands.GetTournamentCommand;
 import commands.RegisterCommand;
